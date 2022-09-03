@@ -2,8 +2,7 @@
   "name": "jindan",
   "version": "0.1.0",
   "description": "A solution which can give sites a long-term high availability",
-  "main": "dist/jindan.umd.js",
-  "module": "dist/jindan.esm.js",
+  "main": "dist/jindan.js",
   "typings": "dist/types/main.d.ts",
   "files": [
     "dist"
@@ -15,24 +14,24 @@
   "author": "BackRunner",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
-    "@types/node": "^16.11.38",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@typescript-eslint/parser": "^5.27.0",
+    "@types/node": "^16.11.56",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "cross-env": "^7.0.3",
-    "eslint": "^8.17.0",
-    "eslint-config-alloy": "^4.5.1",
+    "eslint": "^8.23.0",
+    "eslint-config-alloy": "^4.6.2",
     "eslint-config-prettier": "^8.5.0",
-    "prettier": "^2.6.2",
+    "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.75.5",
+    "rollup": "^2.79.0",
     "rollup-plugin-filesize": "^9.1.2",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.31.2",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.3"
+    "typescript": "^4.8.2"
   }
 }
