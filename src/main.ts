@@ -1,12 +1,15 @@
 import { ResourceNodeTagNames } from './constants';
+import { ApplicationInfo } from './types/app';
 import { JinDanConstructorOptions } from './types/options';
 
 class JinDan {
   private options: JinDanConstructorOptions;
   private observer: MutationObserver;
+  private appInfo: ApplicationInfo;
 
   public constructor(options: JinDanConstructorOptions) {
     this.options = options;
+    this.appInfo = options.appInfo;
     this.observer = new MutationObserver(this.mutationCallback.bind(this));
   }
 

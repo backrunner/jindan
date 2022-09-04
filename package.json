@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "description": "A solution which can give sites a long-term high availability",
   "main": "dist/jindan.js",
+  "module": "dist/jindan.esm.js",
   "typings": "dist/types/main.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "watch": "cross-env NODE_ENV=dev rollup -c rollup.config.ts -w",
-    "build": "rimraf ./dist && tsc --module commonjs && cross-env NODE_ENV=production rollup -c rollup.config.ts && rimraf ./dist/lib"
+    "build": "rimraf ./dist && npm run build:bundle && npm run build:module",
+    "build:bundle": "cross-env NODE_ENV=production BUILD_TARGET=bundle rollup -c rollup.config.ts",
+    "build:module": "cross-env NODE_ENV=production BUILD_TARGET=module rollup -c rollup.config.ts"
   },
   "author": "BackRunner",
   "license": "Apache-2.0",
@@ -30,8 +33,13 @@
     "rollup-plugin-filesize": "^9.1.2",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.31.2",
+    "rollup-plugin-typescript2": "^0.33.0",
     "tslib": "^2.4.0",
     "typescript": "^4.8.2"
+  },
+  "dependencies": {
+    "@aws-crypto/sha256-browser": "^2.0.1",
+    "dexie": "^3.2.2",
+    "lodash-es": "^4.17.21"
   }
 }

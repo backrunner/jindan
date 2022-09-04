@@ -24,7 +24,10 @@ if (process.env.NODE_ENV === 'production') {
 
 export default {
   input: `src/main.ts`,
-  output: [{ file: pkg.main, name: pkg.name, format: 'iife', sourcemap: true }],
+  output: [
+    { file: pkg.main, name: 'JinDan', format: 'iife', sourcemap: true },
+    { file: pkg.module, name: pkg.name, format: 'esm', sourcemap: true },
+  ],
   external: [],
   watch: {
     include: 'src/**',
