@@ -48,6 +48,11 @@ export class JinDanEndpoint {
     }
   }
 
+  /**
+   * Format the endpoint path for requesting
+   * @param path Path which should be formatted
+   * @returns formatted fallback path
+   */
   private formatFallbackPath(path: string) {
     if (path.startsWith('/')) {
       return path.slice(1);
