@@ -1,14 +1,15 @@
 import { ConfigManagerOptions, JinDanConfig } from '../types/config';
 import { JinDanDatabase } from './db';
 import { Logger } from '../utils/logger';
+import { mergeWith } from '../utils/merge';
+import { CONFIG_VERSION } from '../constants';
 
 const logger = new Logger('ConfigManager');
-
-const CONFIG_VERSION = 1;
 
 export class JinDanConfigManager {
   private db: JinDanDatabase;
   private config?: JinDanConfig;
+
   public constructor(opts: ConfigManagerOptions) {
     this.db = new JinDanDatabase({
       ...opts.database,
@@ -16,6 +17,7 @@ export class JinDanConfigManager {
     });
     this.initConfig(opts.local);
   }
+
   /**
    *
    * @param localConfig
@@ -32,31 +34,51 @@ export class JinDanConfigManager {
         })
         .toArray();
       if (storedRemoteConfig.length > 0) {
-        storedRemoteConfig.sort((a, b) => b.modified_time - a.modified_time);
-        remoteConfig = storedRemoteConfig[0];
+        storedRemoteConfig.sort((a, b) => b.create_time - a.create_time);
+        remoteConfig = storedRemoteConfig[0].config;
       }
     } catch (err) {
       logger.error(err);
     }
     // Merge remote config to local config which transformed from the local options
-    const mergedRemoteConfig = {
-      ...localConfig,
-      ...remoteConfig,
-    };
-    this.config = mergedRemoteConfig;
+    this.config = mergeWith(localConfig, remoteConfig);
   }
+
   /**
    * Store the remote config to the local
    * @param config The config downloaded from the remote endpoint
    * @param immediate Should the remote config be merged to the local immediately
    */
   public async setupRemoteConfig(config: Partial<JinDanConfig>, immediate = false) {
-    // TODO: setup remote config
+    const latestCreateTime = Date.now();
+    await this.db.config.add({
+      config,
+      version: CONFIG_VERSION,
+      create_time: latestCreateTime,
+    });
+    if (immediate) {
+      this.config = mergeWith(this.config, config);
+    }
+    // Try to remove the useless config in the local database
+    this.cleanOutdatedConfig(latestCreateTime);
   }
+
   /**
    * Get if JinDan should do the replacement
    */
   public getReplacementEnabled() {
     return !!this.config?.replacement.enabled;
+  }
+
+  public getResourceManifest() {
+    return this.config?.replacement.manifest || [];
+  }
+
+  /**
+   * Remove outdated config
+   */
+  private async cleanOutdatedConfig(lastestCreatedTime: number) {
+    const outdatedConfig = await this.db.config.where('create_time').below(lastestCreatedTime).toArray();
+    await this.db.config.bulkDelete(outdatedConfig.map((item) => item.id as number));
   }
 }

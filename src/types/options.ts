@@ -65,6 +65,11 @@ export interface RemoteOptions {
    * Should request all the endpoints parallely
    */
   requestAll?: boolean;
+  /**
+   * Fetch options
+   */
+  // eslint-disable-next-line no-undef
+  fetchOptions?: RequestInit;
 }
 
 export interface DatabaseOptions {

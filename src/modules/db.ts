@@ -3,11 +3,10 @@ import { DatabaseOptions } from '../main';
 import { JinDanConfig } from '../types/config';
 
 export interface IConfig {
-  id: number;
-  config: JinDanConfig;
-  version: string;
+  id?: number;
+  config: Partial<JinDanConfig>;
+  version: number;
   create_time: number;
-  modified_time: number;
 }
 
 export class JinDanDatabase extends Dexie {

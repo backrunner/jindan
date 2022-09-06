@@ -7,7 +7,6 @@ export interface EndPointConstructorOpts extends RemoteOptions {
   appInfo: ApplicationInfo;
   fallbackOptions: EndpointFallbackOptions;
   configManager: JinDanConfigManager;
-  token?: string;
 }
 
 export interface EndpointResponse {

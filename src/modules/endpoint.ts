@@ -39,7 +39,7 @@ export class JinDanEndpoint {
    * @param fetchOptions Override the default fetch options
    */
   // eslint-disable-next-line no-undef
-  public async request(fetchOptions: RequestInit) {
+  public async request(fetchOptions?: RequestInit) {
     if (!this.async) {
       await this.requestRemote(fetchOptions);
     } else {
@@ -100,7 +100,7 @@ export class JinDanEndpoint {
    * @param fetchOptions Override the default fetch options
    */
   // eslint-disable-next-line no-undef
-  private async requestRemote(fetchOptions: RequestInit) {
+  private async requestRemote(fetchOptions?: RequestInit) {
     const requests = (await this.composeEndpoints()).map((endpoint) =>
       this.createRemoteRequest(endpoint, fetchOptions),
     );

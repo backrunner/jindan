@@ -20,7 +20,7 @@ export interface ReplacementConfig {
   /**
    * All the resources that JinDan will be loaded
    */
-  manifest: JinDanManifest;
+  manifest?: JinDanManifest;
 }
 
 /**
@@ -42,5 +42,5 @@ export interface JinDanConfig {
   /**
    * The version of this config, usally the same as the database structure version
    */
-  version: string;
+  version: number;
 }
