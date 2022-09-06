@@ -118,6 +118,14 @@ export class JinDanEndpoint {
     await this.configManager.setupRemoteConfig(res, !this.async);
   }
 
+  private delayWhenFailed() {
+    return new Promise<null>((resolve) => {
+      setTimeout(() => {
+        resolve(null);
+      }, FAILED_DELAY);
+    });
+  }
+
   /**
    * Create a remote request for single endpoint
    * @param endpoint Single endpoint URL, this module will request it directly and will not add anything to the URL.
@@ -130,43 +138,44 @@ export class JinDanEndpoint {
     const body = {
       appInfo: this.appInfo,
     };
-    const res = await fetch(endpoint, {
-      // Always using post rather than get to request remote endpoint
-      method: 'POST',
-      credentials: 'omit',
-      // It will be some malicious redirecting hijack on the whole link, so we set the 'redirect' to 'error'
-      redirect: 'error',
-      // Only judge the domain
-      referrerPolicy: 'origin',
-      // Regard body as JSON
-      headers: {
-        'Content-Type': 'application/json',
-        'X-JinDan-Version': version,
-        'X-JinDan-Timestamp': `${now}`,
-        'X-JinDan-Sign': await signRequest({
-          body,
-          timestamp: now,
-          version,
-          token: this.token,
-        }),
-      },
-      // Pass application info to remote
-      body: JSON.stringify(body),
-    });
-    if (res.status !== 200 || !res.ok) {
-      return new Promise<null>((resolve) => {
-        setTimeout(() => {
-          resolve(null);
-        }, FAILED_DELAY);
+    let res;
+    try {
+      res = await fetch(endpoint, {
+        // Always using post rather than get to request remote endpoint
+        method: 'POST',
+        credentials: 'omit',
+        // It will be some malicious redirecting hijack on the whole link, so we set the 'redirect' to 'error'
+        redirect: 'error',
+        // Only judge the domain
+        referrerPolicy: 'origin',
+        // Regard body as JSON
+        headers: {
+          'Content-Type': 'application/json',
+          'X-JinDan-Version': version,
+          'X-JinDan-Timestamp': `${now}`,
+          'X-JinDan-Sign': await signRequest({
+            body,
+            timestamp: now,
+            version,
+            token: this.token,
+          }),
+        },
+        // Pass application info to remote
+        body: JSON.stringify(body),
       });
+    } catch (err) {
+      console.error(err);
+      await this.delayWhenFailed();
+      return;
+    }
+    if (res?.status !== 200 || !res?.ok) {
+      await this.delayWhenFailed();
+      return;
     }
     const resolved = (await res.json()) as EndpointResponse;
     if (resolved?.code !== 0) {
-      return new Promise<null>((resolve) => {
-        setTimeout(() => {
-          resolve(null);
-        }, FAILED_DELAY);
-      });
+      await this.delayWhenFailed();
+      return;
     }
     return resolved.data;
   }
