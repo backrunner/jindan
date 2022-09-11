@@ -41,6 +41,7 @@
   "dependencies": {
     "@aws-crypto/sha256-browser": "^2.0.1",
     "dexie": "^3.2.2",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "nanoid": "^4.0.0"
   }
 }
