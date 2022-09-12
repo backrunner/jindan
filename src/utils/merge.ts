@@ -1,4 +1,4 @@
-import { mergeWith as merge } from 'lodash-es';
+import merge from 'lodash/mergeWith';
 
 const customizer = (obj: any, src: any) => {
   if (Array.isArray(obj)) {
