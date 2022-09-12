@@ -156,7 +156,10 @@ class JinDan {
       this.replaceResources();
       // Nodes in local cache and which has been blocked will not be used anymore, so we need do a clear.
       this.nodeCache.clear();
-      // TODO: clear useless script node
+      const blockedScriptNodes = document.querySelectorAll('script[type="jindan/blocked"]');
+      blockedScriptNodes.forEach((blockedScriptNode) => {
+        blockedScriptNode.remove();
+      });
       return;
     }
     // Firstly, release all the resources node
@@ -181,8 +184,9 @@ class JinDan {
   /**
    * Do the resource replacement
    */
-  private replaceResources() {
-    addResourcesToDocument(this.configManager.getResourceManifest());
+  private async replaceResources() {
+    const replacementBaseUrl = await this.configManager.getReplacementBaseUrl();
+    addResourcesToDocument(this.configManager.getResourceManifest(), replacementBaseUrl);
   }
 }
 

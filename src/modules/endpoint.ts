@@ -67,7 +67,7 @@ export class JinDanEndpoint {
     let res = [];
     if (this.requestAll) {
       res = this.endpoints.concat(this.fallbackOptions.endpoints);
-      if (this.fallbackOptions.otp) {
+      if (this.fallbackOptions.otp?.enabled) {
         // jdc means JinDan Config
         const { path: fallbackPath = '/jdc' } = this.fallbackOptions.otp;
         res = res.concat(
@@ -81,9 +81,9 @@ export class JinDanEndpoint {
       // Pick one from each group
       const localGroup = this.endpoints;
       const fallbackGroup = this.fallbackOptions.endpoints;
-      const otpGroup = this.fallbackOptions.otp
+      const otpGroup = this.fallbackOptions.otp?.enabled
         ? (await composeOTPDomains(this.fallbackOptions.otp)).map((domain) => {
-            const { path: fallbackPath = '/jdc' } = this.fallbackOptions.otp;
+            const { path: fallbackPath = '/jdc' } = this.fallbackOptions.otp!;
             return `https://${domain}/${this.formatFallbackPath(fallbackPath)}`;
           })
         : [];

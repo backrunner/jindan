@@ -2,6 +2,10 @@ import { ApplicationInfo } from './app';
 
 export interface OTPFallbackOptions {
   /**
+   * Is otp fallback enabled
+   */
+  enabled: boolean;
+  /**
    * Whether the top domain will be a randomized string
    */
   fullyRandom: boolean;
@@ -39,7 +43,7 @@ export interface EndpointFallbackOptions {
   /**
    * OTP fallback options
    */
-  otp: OTPFallbackOptions & { path?: string };
+  otp?: OTPFallbackOptions & { path?: string };
 }
 
 export interface FallbackOptions {
