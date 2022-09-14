@@ -1,0 +1,21 @@
+{
+  "name": "jindan-cli",
+  "version": "0.1.0",
+  "description": "The executable jindan script",
+  "bin": {
+    "jindan": "./bin/cli.js"
+  },
+  "author": "BackRunner",
+  "license": "Apache-2.0",
+  "files": [
+    "bin"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c --watch"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "commander": "^9.4.0"
+  }
+}

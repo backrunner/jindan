@@ -2,6 +2,8 @@
 .editorconfig
 .eslintrc.js
 .prettierrc.js
+.vscode
 rollup.config.ts
 tsconfig.json
 src
+packages
