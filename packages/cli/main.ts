@@ -2,6 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import { Command } from 'commander';
 import { version } from './package.json';
+import { generateManifest } from './modules/generate';
+import logger from './utils/logger';
 
 interface JinDanCliOptions {
   output?: string;
@@ -16,7 +18,7 @@ program
   .description('Generate a resource manifest based on the entry HTML file.')
   .argument('[inputHtmlPath]', 'The entry HTML file.')
   .option('-o, --output <path>', 'Manifest output path.')
-  .action((inputHtmlPath: string | undefined, options: JinDanCliOptions) => {
+  .action(async (inputHtmlPath: string | undefined, options: JinDanCliOptions) => {
     // build up the target path
     let targetHtmlPath = '';
     if (inputHtmlPath) {
@@ -39,7 +41,16 @@ program
       outputPath = path.resolve(process.cwd(), './dist/jindan.manifest.json');
     }
     // read the entry html file
+    logger.info('Read the html files...');
+    const html = fs.readFileSync(targetHtmlPath, { encoding: 'utf-8' });
     // generate the manifest file
+    logger.info('Starting to generate the manifest...');
+    const manifest = await generateManifest(html);
+    logger.info('Manifest generated.');
+    // write the manifest file
+    logger.info('Writing the manifest file...');
+    fs.writeFileSync(outputPath, JSON.stringify(manifest, null, 2));
+    logger.success('Manifest file generated.');
   });
 
 program.parse();
