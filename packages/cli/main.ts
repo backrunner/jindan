@@ -52,6 +52,10 @@ program
     logger.info('Manifest generated.');
     // write the manifest file
     logger.info('Writing the manifest file...');
+    // if existed, remove first
+    if (fs.existsSync(outputPath)) {
+      fs.unlinkSync(outputPath);
+    }
     fs.writeFileSync(outputPath, JSON.stringify(manifest, null, 2));
     logger.success('Manifest file generated.');
   });
