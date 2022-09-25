@@ -10,9 +10,9 @@ const formatFileName = (fileName: string) => {
   const lastPart = fileName.slice(lastSlashIdx + 1);
   const queryIdx = lastPart.indexOf('?');
   if (queryIdx >= 0) {
-    return lastPart;
+    return lastPart.slice(0, queryIdx);
   }
-  return lastPart.slice(0, queryIdx);
+  return lastPart;
 };
 
 const getHtmlBaseDirPath = (htmlPath: string) => {
