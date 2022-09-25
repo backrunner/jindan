@@ -1,5 +1,8 @@
 import * as cheerio from 'cheerio';
+import path from 'path';
+import fs from 'fs';
 import { JinDanManifest } from '../../../src/types/manifest';
+import { getIntegrity } from '../utils/integrity';
 
 const formatFileName = (fileName: string) => {
   if (!fileName.includes('/')) return fileName;
@@ -12,16 +15,52 @@ const formatFileName = (fileName: string) => {
   return lastPart.slice(0, queryIdx);
 };
 
-const getScriptTagHandler = (manifest: JinDanManifest, targetParent: 'head' | 'body') => {
+const getHtmlBaseDirPath = (htmlPath: string) => {
+  return path.dirname(htmlPath);
+};
+
+const getRelativePath = (path: string) => {
+  let res = path;
+  const httpProtoTester = /^https?:\/\//;
+  if (httpProtoTester.test(path)) {
+    res = res.replace(httpProtoTester, '');
+    const firstSlashIdx = res.indexOf('/');
+    // e.g.: https://pwp.app/js/a.js => js/a.js
+    res = res.slice(firstSlashIdx + 1);
+  } else if (res.startsWith('/')) {
+    res = res.slice(1);
+  }
+  return res;
+};
+
+const getIntegrityInfo = (htmlPath: string, relativePath: string) => {
+  const htmlBaseDirPath = getHtmlBaseDirPath(htmlPath);
+  const targetFilePath = path.resolve(htmlBaseDirPath, relativePath);
+  if (!fs.existsSync(targetFilePath)) {
+    return;
+  }
+  const integrity = getIntegrity(targetFilePath);
+  if (!integrity) {
+    return;
+  }
+  return {
+    integrity,
+  };
+};
+
+const getScriptTagHandler = (manifest: JinDanManifest, htmlPath: string, targetParent: 'head' | 'body') => {
   return (index, el) => {
-    if (el.attribs['jindan-ignore']) {
+    if (el.attribs['jindan-ignore'] || !el.attribs?.src) {
       return;
     }
+    const relativePath = getRelativePath(el.attribs.src);
+    const integrityInfo = getIntegrityInfo(htmlPath, relativePath);
     manifest.push({
       tagName: 'script',
       fileName: formatFileName(el.attribs.src),
       targetParent,
       attributes: el.attribs,
+      ...(integrityInfo || null),
     });
   };
 };
@@ -56,16 +95,16 @@ const getStyleTagHandler = ($: cheerio.CheerioAPI, manifest, targetParent: 'head
   };
 };
 
-export const generateManifest = async (htmlContent: string) => {
+export const generateManifest = async ({ content, htmlPath }: { content: string; htmlPath: string }) => {
   const manifest: JinDanManifest = [];
-  const $ = cheerio.load(htmlContent);
+  const $ = cheerio.load(content);
   // find head and body tag
   const head = $('head');
   const body = $('body');
   // process head tags
   const scriptHeadTags = head.find('script');
   if (scriptHeadTags.length > 0) {
-    scriptHeadTags.each(getScriptTagHandler(manifest, 'head'));
+    scriptHeadTags.each(getScriptTagHandler(manifest, htmlPath, 'head'));
   }
   const linkHeadTags = head.find('link');
   if (linkHeadTags.length > 0) {
@@ -78,7 +117,7 @@ export const generateManifest = async (htmlContent: string) => {
   // process body tags
   const scriptBodyTags = body.find('script');
   if (scriptBodyTags.length > 0) {
-    scriptBodyTags.each(getScriptTagHandler(manifest, 'body'));
+    scriptBodyTags.each(getScriptTagHandler(manifest, htmlPath, 'body'));
   }
   const linkBodyTags = body.find('link');
   if (linkBodyTags.length > 0) {

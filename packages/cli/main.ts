@@ -45,7 +45,10 @@ program
     const html = fs.readFileSync(targetHtmlPath, { encoding: 'utf-8' });
     // generate the manifest file
     logger.info('Starting to generate the manifest...');
-    const manifest = await generateManifest(html);
+    const manifest = await generateManifest({
+      content: html,
+      htmlPath: targetHtmlPath,
+    });
     logger.info('Manifest generated.');
     // write the manifest file
     logger.info('Writing the manifest file...');
