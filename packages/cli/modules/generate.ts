@@ -50,7 +50,7 @@ const getIntegrityInfo = (htmlPath: string, relativePath: string) => {
 
 const getScriptTagHandler = (manifest: JinDanManifest, htmlPath: string, targetParent: 'head' | 'body') => {
   return (index, el) => {
-    if (el.attribs['jindan-ignore'] || !el.attribs?.src) {
+    if (typeof el.attribs['jindan-ignore'] !== 'undefined' || !el.attribs?.src) {
       return;
     }
     const relativePath = getRelativePath(el.attribs.src);
@@ -68,7 +68,7 @@ const getScriptTagHandler = (manifest: JinDanManifest, htmlPath: string, targetP
 const getLinkTagHandler = (manifest: JinDanManifest, targetParent: 'head' | 'body') => {
   return (index, el) => {
     const rel = el.attribs.rel;
-    if (rel !== 'stylesheet' || el.attribs['jindan-ignore']) {
+    if (rel !== 'stylesheet' || typeof el.attribs['jindan-ignore'] !== 'undefined') {
       return;
     }
     manifest.push({
@@ -83,7 +83,7 @@ const getLinkTagHandler = (manifest: JinDanManifest, targetParent: 'head' | 'bod
 const getStyleTagHandler = ($: cheerio.CheerioAPI, manifest, targetParent: 'head' | 'body') => {
   return (index, el: cheerio.Element) => {
     const content = $(el).html();
-    if (el.attribs['jindan-ignore'] || !content) {
+    if (typeof el.attribs['jindan-ignore'] !== 'undefined' || !content) {
       return;
     }
     manifest.push({
