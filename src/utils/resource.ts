@@ -15,7 +15,7 @@ const addScriptTagToDocument = (resource: JinDanManifestItem, baseUrl: string) =
   script.type = 'text/javascript';
   if (resource.content) {
     script.innerHTML = resource.content;
-  } else {
+  } else if (resource.fileName) {
     script.src = `${baseUrl}/${formatResourceFileName(resource.fileName)}`;
   }
   if (resource.integrity) {
@@ -29,6 +29,9 @@ const addScriptTagToDocument = (resource: JinDanManifestItem, baseUrl: string) =
 };
 
 const addLinkTagToDocument = (resource: JinDanManifestItem, baseUrl: string) => {
+  if (!resource.fileName) {
+    return;
+  }
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = `${baseUrl}/${formatResourceFileName(resource.fileName)}`;
