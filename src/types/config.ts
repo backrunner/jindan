@@ -42,5 +42,9 @@ export interface JinDanConfig {
   /**
    * The version of this config, usally the same as the database structure version
    */
-  version: number;
+  version?: number;
+  /**
+   * If the configuration is fetched from remote, it will contain a timestamp of the fetch.
+   */
+  createTime?: number;
 }

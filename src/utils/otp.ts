@@ -1,6 +1,5 @@
-import { Sha256 } from '@aws-crypto/sha256-browser';
+import sha256 from 'crypto-js/sha256';
 import { OTPFallbackOptions } from '../main';
-import { uint8ToHexString } from './string';
 
 const A_DAY_IN_SECONDS = 24 * 60 * 60;
 
@@ -23,18 +22,12 @@ export const composeOTPDomains = async (options: OTPFallbackOptions) => {
   if (fullyRandom) {
     const subHashPaylod = `jindan_sub_${currentPeriod}_${token}`;
     const hashPayload = `jindan_${currentPeriod}_${token}`;
-    const hash = new Sha256();
-    const subHash = new Sha256();
-    hash.update(hashPayload);
-    subHash.update(subHashPaylod);
-    const topDomain = uint8ToHexString(await hash.digest()).slice(0, 16);
-    const subDomain = uint8ToHexString(await subHash.digest()).slice(0, 12);
+    const topDomain = sha256(hashPayload).toString().slice(0, 16);
+    const subDomain = sha256(subHashPaylod).toString().slice(0, 12);
     return domainList.map((domain) => `${subDomain}.${topDomain}.${formatBaseDomain(domain)}`);
   } else {
     const hashPayload = `jindan_${timePeriod}_${token}`;
-    const hash = new Sha256();
-    hash.update(hashPayload);
-    const subDomain = uint8ToHexString(await hash.digest()).slice(0, 12);
+    const subDomain = sha256(hashPayload).toString().slice(0, 12);
     return domainList.map((domain) => `${subDomain}.${formatBaseDomain(domain)}`);
   }
 };

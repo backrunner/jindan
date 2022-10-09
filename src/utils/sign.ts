@@ -1,11 +1,8 @@
-import { Sha256 } from '@aws-crypto/sha256-browser';
+import sha256 from 'crypto-js/sha256';
 import { SignRequestPayload } from '../types/sign';
-import { uint8ToBase64 } from './string';
 
-export const signRequest = async (payload: SignRequestPayload) => {
+export const signRequest = (payload: SignRequestPayload) => {
   const { version, body, timestamp, token } = payload;
   const composed = `${version}_${JSON.stringify(body)}_${timestamp}_${token || 'jindan'}`;
-  const hash = new Sha256();
-  hash.update(composed);
-  return uint8ToBase64(await hash.digest());
+  return sha256(composed).toString();
 };

@@ -1,5 +1,4 @@
 import { ConfigManagerOptions, JinDanConfig } from '../types/config';
-import { JinDanDatabase } from './db';
 import { Logger } from '../utils/logger';
 import { mergeWith } from '../utils/merge';
 import { CONFIG_VERSION } from '../constants';
@@ -7,17 +6,39 @@ import { pickOneFromGroup } from '../utils/random';
 import { formatFallbackDomain } from '../utils/string';
 import { composeOTPDomains } from '../utils/otp';
 
+const REMOTE_CONFIG_STORE_KEY = '__jindan_remote_config';
+
 const logger = new Logger('ConfigManager');
 
 export class JinDanConfigManager {
-  private db: JinDanDatabase;
+  public static getStoredRemoteConfig() {
+    let storedRemoteConfig: Partial<JinDanConfig> = {};
+    try {
+      const storedRemoteConfigRaw = window.localStorage.getItem(REMOTE_CONFIG_STORE_KEY);
+      if (storedRemoteConfigRaw) {
+        storedRemoteConfig = JSON.parse(storedRemoteConfigRaw);
+      }
+    } catch (err) {
+      logger.error(err);
+      return null;
+    }
+    return storedRemoteConfig;
+  }
+
+  public static getStoredRemoteConfigMeta() {
+    const storedRemoteConfig = JinDanConfigManager.getStoredRemoteConfig();
+    if (storedRemoteConfig) {
+      return {
+        version: storedRemoteConfig.version,
+        createTime: storedRemoteConfig.createTime,
+      };
+    }
+    return null;
+  }
+
   private config?: JinDanConfig;
 
   public constructor(opts: ConfigManagerOptions) {
-    this.db = new JinDanDatabase({
-      ...opts.database,
-      version: CONFIG_VERSION,
-    });
     this.initConfig(opts.local);
   }
 
@@ -26,25 +47,9 @@ export class JinDanConfigManager {
    * @param localConfig
    */
   public async initConfig(localConfig: JinDanConfig) {
-    let remoteConfig: Partial<JinDanConfig> = {};
-    try {
-      if (!this.db.isOpen()) {
-        throw new Error('Database is not opened.');
-      }
-      const storedRemoteConfig = await this.db.config
-        .where({
-          version: CONFIG_VERSION,
-        })
-        .toArray();
-      if (storedRemoteConfig.length > 0) {
-        storedRemoteConfig.sort((a, b) => b.create_time - a.create_time);
-        remoteConfig = storedRemoteConfig[0].config;
-      }
-    } catch (err) {
-      logger.error(err);
-    }
+    const storedRemoteConfig = JinDanConfigManager.getStoredRemoteConfig();
     // Merge remote config to local config which transformed from the local options
-    this.config = mergeWith(localConfig, remoteConfig);
+    this.config = mergeWith(localConfig, storedRemoteConfig);
   }
 
   /**
@@ -54,16 +59,17 @@ export class JinDanConfigManager {
    */
   public async setupRemoteConfig(config: Partial<JinDanConfig>, immediate = false) {
     const latestCreateTime = Date.now();
-    await this.db.config.add({
-      config,
-      version: CONFIG_VERSION,
-      create_time: latestCreateTime,
-    });
+    window.localStorage.setItem(
+      REMOTE_CONFIG_STORE_KEY,
+      JSON.stringify({
+        ...config,
+        version: CONFIG_VERSION,
+        createTime: latestCreateTime,
+      }),
+    );
     if (immediate) {
       this.config = mergeWith(this.config, config);
     }
-    // Try to remove the useless config in the local database
-    this.cleanOutdatedConfig(latestCreateTime);
   }
 
   /**
@@ -92,13 +98,5 @@ export class JinDanConfigManager {
 
   public getResourceManifest() {
     return this.config?.replacement.manifest || [];
-  }
-
-  /**
-   * Remove outdated config
-   */
-  private async cleanOutdatedConfig(lastestCreatedTime: number) {
-    const outdatedConfig = await this.db.config.where('create_time').below(lastestCreatedTime).toArray();
-    await this.db.config.bulkDelete(outdatedConfig.map((item) => item.id as number));
   }
 }

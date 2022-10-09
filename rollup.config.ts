@@ -4,6 +4,7 @@ import json from '@rollup/plugin-json';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
 import filesize from 'rollup-plugin-filesize';
+import { babel } from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
@@ -14,6 +15,7 @@ const plugins = [
     browser: true,
   }),
   commonjs(),
+  babel({ babelHelpers: 'runtime', presets: ['@babel/preset-env'], plugins: ['@babel/plugin-transform-runtime'] }),
   typescript({ useTsconfigDeclarationDir: true }),
   sourceMaps(),
 ];

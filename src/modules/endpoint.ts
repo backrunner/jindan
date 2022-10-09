@@ -1,12 +1,12 @@
 import { ApplicationInfo } from '../types/app';
 import { EndPointConstructorOpts, EndpointResponse } from '../types/endpoint';
-import { version } from '../../package.json';
 import { EndpointFallbackOptions } from '../main';
 import { JinDanConfigManager } from './config';
 import { signRequest } from '../utils/sign';
 import { Logger } from '../utils/logger';
 import { composeOTPDomains } from '../utils/otp';
 import { pickOneFromGroup } from '../utils/random';
+import { CONFIG_VERSION } from '../constants';
 
 /**
  * Delay amount when a request failed
@@ -135,6 +135,7 @@ export class JinDanEndpoint {
   // eslint-disable-next-line no-undef
   private async createRemoteRequest(endpoint: string, fetchOptions?: RequestInit) {
     const now = Date.now();
+    const storedRemoteConfigMeta = JinDanConfigManager.getStoredRemoteConfigMeta();
     const body = {
       appInfo: this.appInfo,
     };
@@ -151,17 +152,24 @@ export class JinDanEndpoint {
         // Regard body as JSON
         headers: {
           'Content-Type': 'application/json',
-          'X-JinDan-Version': version,
+          'X-JinDan-Version': `${CONFIG_VERSION}`,
           'X-JinDan-Timestamp': `${now}`,
-          'X-JinDan-Sign': await signRequest({
+          'X-JinDan-Sign': signRequest({
             body,
             timestamp: now,
-            version,
+            version: `${CONFIG_VERSION}`,
             token: this.token,
           }),
+          ...(storedRemoteConfigMeta
+            ? {
+                'X-Jindan-Local-Version': `${storedRemoteConfigMeta.version}`,
+                'X-Jindan-Local-Create-Time': `${storedRemoteConfigMeta.createTime}`,
+              }
+            : null),
         },
         // Pass application info to remote
         body: JSON.stringify(body),
+        ...fetchOptions,
       });
     } catch (err) {
       console.error(err);
