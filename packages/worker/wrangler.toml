@@ -1,0 +1,10 @@
+name = "worker"
+main = "src/index.ts"
+compatibility_date = "2022-09-26"
+account_id = "b6754402d59fc29ee8b62119014fec89"
+route = "worker.pixland.pwp.app/*"
+
+[[r2_buckets]]
+binding = 'jindan'
+bucket_name = 'jindan'
+preview_bucket_name = 'jindan-dev'
