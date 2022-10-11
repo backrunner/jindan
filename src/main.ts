@@ -1,9 +1,8 @@
 import { nanoid } from 'nanoid';
+import { ApplicationInfo, JinDanConstructorOptions } from 'jindan-types';
 import { CONFIG_VERSION, ResourceNodeTagNames, StyleNodeTagNames } from './constants';
 import { JinDanConfigManager } from './modules/config';
 import { JinDanEndpoint } from './modules/endpoint';
-import { ApplicationInfo } from './types/app';
-import { JinDanConstructorOptions } from './types/options';
 import { DocumentNodeCache } from './utils/cache';
 import { addResourcesToDocument } from './utils/resource';
 
@@ -191,6 +190,3 @@ class JinDan {
 }
 
 export default JinDan;
-
-// Interface exports
-export * from './types/options';

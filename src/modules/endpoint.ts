@@ -1,6 +1,4 @@
-import { ApplicationInfo } from '../types/app';
-import { EndPointConstructorOpts, EndpointResponse } from '../types/endpoint';
-import { EndpointFallbackOptions } from '../main';
+import { ApplicationInfo, EndPointConstructorOpts, EndpointResponse, EndpointFallbackOptions } from 'jindan-types';
 import { JinDanConfigManager } from './config';
 import { signRequest } from '../utils/sign';
 import { Logger } from '../utils/logger';

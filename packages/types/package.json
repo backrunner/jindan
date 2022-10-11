@@ -1,0 +1,8 @@
+{
+  "name": "jindan-types",
+  "version": "0.2.0",
+  "description": "Types for jindan",
+  "main": "main.ts",
+  "author": "BackRunner",
+  "license": "MIT"
+}
