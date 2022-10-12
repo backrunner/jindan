@@ -1,10 +1,16 @@
-import { ApplicationInfo, EndPointConstructorOpts, EndpointResponse, EndpointFallbackOptions } from 'jindan-types';
+import { ApplicationInfo, EndpointResponse, EndpointFallbackOptions, RemoteOptions } from 'jindan-types';
 import { JinDanConfigManager } from './config';
 import { signRequest } from '../utils/sign';
 import { Logger } from '../utils/logger';
 import { composeOTPDomains } from '../utils/otp';
 import { pickOneFromGroup } from '../utils/random';
 import { CONFIG_VERSION } from '../constants';
+
+export interface EndPointConstructorOpts extends RemoteOptions {
+  appInfo: ApplicationInfo;
+  fallbackOptions: EndpointFallbackOptions;
+  configManager: JinDanConfigManager;
+}
 
 /**
  * Delay amount when a request failed

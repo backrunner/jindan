@@ -1,4 +1,4 @@
-import { ConfigManagerOptions, JinDanConfig } from '../types/config';
+import { ConfigManagerOptions, JinDanConfig } from 'jindan-types';
 import { Logger } from '../utils/logger';
 import { mergeWith } from '../utils/merge';
 import { CONFIG_VERSION } from '../constants';
