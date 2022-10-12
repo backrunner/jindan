@@ -1,0 +1,19 @@
+{
+  "name": "jindan-webpack-plugin",
+  "version": "0.2.1",
+  "description": "Webpack plugin for JinDan",
+  "main": "./dist/main.js",
+  "author": "BackRunner",
+  "license": "MIT",
+  "scripts": {
+    "build": "rimraf dist && tsc"
+  },
+  "devDependencies": {
+    "@types/webpack": "^4.41.32",
+    "html-webpack-plugin": "^4.5.2",
+    "jindan-types": "^0.2.0",
+    "rimraf": "^3.0.2",
+    "webpack": "^4.46.0",
+    "webpack-sources": "^3.2.3"
+  }
+}
