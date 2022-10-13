@@ -7,3 +7,4 @@ rollup.config.ts
 tsconfig.json
 src
 packages
+scripts
