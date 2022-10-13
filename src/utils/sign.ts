@@ -1,5 +1,5 @@
 import sha256 from 'crypto-js/sha256';
-import { SignRequestPayload } from '../types/sign';
+import { SignRequestPayload } from 'jindan-types';
 
 export const signRequest = (payload: SignRequestPayload) => {
   const { version, body, timestamp, token } = payload;

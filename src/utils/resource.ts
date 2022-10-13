@@ -1,4 +1,4 @@
-import { JinDanManifest, JinDanManifestItem } from '../types/manifest';
+import { JinDanManifest, JinDanManifestItem } from 'jindan-types';
 
 const formatResourceFileName = (fileName: string) => {
   return fileName.replace(/^\//, '');

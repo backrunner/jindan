@@ -1,5 +1,5 @@
 import sha256 from 'crypto-js/sha256';
-import { OTPFallbackOptions } from '../main';
+import { OTPFallbackOptions } from 'jindan-types';
 
 const A_DAY_IN_SECONDS = 24 * 60 * 60;
 

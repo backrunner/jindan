@@ -17,5 +17,5 @@
     "removeComments": false,
     "preserveSymlinks": true
   },
-  "include": ["."]
+  "include": ["main.ts"]
 }
