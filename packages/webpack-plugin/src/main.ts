@@ -77,7 +77,8 @@ export default class JinDanWebpackPlugin {
                 type: 'text/javascript',
                 src: this.options.path,
               },
-              voidTag: true,
+              innerHTML: '',
+              voidTag: false,
               closeTag: true,
             };
             shouldInjected.push(jindanScriptTag);
@@ -87,13 +88,14 @@ export default class JinDanWebpackPlugin {
           const executionScript = `(function () { var jindan = new window.JinDan(${JSON.stringify(
             jindanConstructorOptions,
           )}); window.__jindan_intance__ = jindan; })();`.trim();
-          const executionScriptTag: HtmlTagObject = {
+          const executionScriptTag: ExHtmlTagObject = {
             tagName: 'script',
             attributes: {
               type: 'text/javascript',
             },
             innerHTML: executionScript,
             voidTag: false,
+            closeTag: true,
           };
           shouldInjected.push(executionScriptTag);
           // inject to head tag
