@@ -1,12 +1,11 @@
 import { JinDanManifest } from './manifest';
-import { DatabaseOptions, FallbackOptions, RemoteOptions } from './options';
+import { FallbackOptions, RemoteOptions } from './options';
 
 export interface ConfigManagerOptions {
   /**
    * The config which is transformed from the local options
    */
   local: JinDanConfig;
-  database?: DatabaseOptions;
 }
 
 type FallbackConfig = FallbackOptions;

@@ -1,18 +1,20 @@
 {
   "name": "jindan-webpack-plugin",
-  "version": "0.2.1",
+  "version": "0.2.1-f2",
   "description": "Webpack plugin for JinDan",
-  "main": "./dist/main.js",
+  "main": "dist/webpack-plugin.js",
+  "typings": "dist/types/main.d.ts",
   "author": "BackRunner",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "rimraf dist && tsc && node ./scripts/afterBuild.js"
+    "build": "rimraf ./dist && rollup -c rollup.config.ts && node ./scripts/afterBuild.js"
   },
   "devDependencies": {
     "@types/webpack": "^4.41.32",
     "html-webpack-plugin": "^4.5.2",
-    "jindan-types": "^0.2.0",
-    "rimraf": "^3.0.2",
     "webpack": "^4.46.0",
     "webpack-sources": "^3.2.3"
   }

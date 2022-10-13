@@ -32,7 +32,7 @@ export interface ResourceFallbackOptions {
   /**
    * OTP fallback options
    */
-  otp: OTPFallbackOptions;
+  otp?: OTPFallbackOptions;
 }
 
 export interface EndpointFallbackOptions {
@@ -76,10 +76,6 @@ export interface RemoteOptions {
   fetchOptions?: RequestInit;
 }
 
-export interface DatabaseOptions {
-  name?: string;
-}
-
 export interface JinDanConstructorOptions {
   /**
    * Details of the fallback options
@@ -93,8 +89,4 @@ export interface JinDanConstructorOptions {
    * Application information
    */
   appInfo: ApplicationInfo;
-  /**
-   * Database options
-   */
-  database?: DatabaseOptions;
 }
