@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 import path from 'path';
 import fs from 'fs';
-import { JinDanManifest } from '../../../src/types/manifest';
+import { JinDanManifest } from '../../types/modules/manifest';
 import { getIntegrity } from '../utils/integrity';
 
 const formatFileName = (fileName: string) => {

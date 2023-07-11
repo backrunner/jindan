@@ -84,8 +84,8 @@ export class JinDanEndpoint {
     } else {
       // Pick one from each group
       const localGroup = this.endpoints;
-      const fallbackGroup = this.fallbackOptions.endpoints;
-      const otpGroup = this.fallbackOptions.otp?.enabled
+      const fallbackGroup = this.fallbackOptions?.endpoints || [];
+      const otpGroup = this.fallbackOptions?.otp?.enabled
         ? (await composeOTPDomains(this.fallbackOptions.otp)).map((domain) => {
             const { path: fallbackPath = '/jdc' } = this.fallbackOptions.otp!;
             return `https://${domain}/${this.formatFallbackPath(fallbackPath)}`;

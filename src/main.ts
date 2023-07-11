@@ -13,7 +13,6 @@ interface ExtendedWindow extends Window {
 class JinDan {
   private options: JinDanConstructorOptions;
   private observer: MutationObserver;
-  private appInfo: ApplicationInfo;
   private async: boolean;
   // modules
   private endpoint: JinDanEndpoint;
@@ -22,7 +21,6 @@ class JinDan {
 
   public constructor(options: JinDanConstructorOptions) {
     this.options = options;
-    this.appInfo = options.appInfo;
     this.async = this.options.remote.async !== false;
     this.nodeCache = new DocumentNodeCache();
     this.observer = new MutationObserver(this.async ? this.nodeBlockCheck.bind(this) : this.holdNodeParsing.bind(this));
