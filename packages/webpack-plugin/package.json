@@ -1,6 +1,6 @@
 {
   "name": "jindan-webpack-plugin",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Webpack plugin for JinDan",
   "main": "dist/webpack-plugin.js",
   "typings": "dist/types/main.d.ts",

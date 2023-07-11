@@ -1,6 +1,6 @@
 {
   "name": "jindan",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A solution which can give sites a long-term high availability",
   "main": "dist/jindan.js",
   "module": "dist/jindan.esm.js",
