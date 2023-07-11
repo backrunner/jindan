@@ -92,9 +92,9 @@ export class JinDanEndpoint {
           })
         : [];
       return [
-        ...(localGroup.length > 1 ? pickOneFromGroup<string>(localGroup) : []),
-        ...(fallbackGroup.length > 1 ? pickOneFromGroup<string>(fallbackGroup) : []),
-        ...(otpGroup.length > 1 ? pickOneFromGroup<string>(otpGroup) : []),
+        ...(localGroup.length > 0 ? pickOneFromGroup<string>(localGroup) : []),
+        ...(fallbackGroup.length > 0 ? pickOneFromGroup<string>(fallbackGroup) : []),
+        ...(otpGroup.length > 0 ? pickOneFromGroup<string>(otpGroup) : []),
       ].filter((item) => item);
     }
   }
