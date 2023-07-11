@@ -92,10 +92,10 @@ export class JinDanEndpoint {
           })
         : [];
       return [
-        pickOneFromGroup<string>(localGroup),
-        pickOneFromGroup<string>(fallbackGroup),
-        pickOneFromGroup<string>(otpGroup),
-      ];
+        ...(localGroup.length > 1 ? pickOneFromGroup<string>(localGroup) : []),
+        ...(fallbackGroup.length > 1 ? pickOneFromGroup<string>(fallbackGroup) : []),
+        ...(otpGroup.length > 1 ? pickOneFromGroup<string>(otpGroup) : []),
+      ].filter((item) => item);
     }
   }
 
@@ -105,9 +105,12 @@ export class JinDanEndpoint {
    */
   // eslint-disable-next-line no-undef
   private async requestRemote(fetchOptions?: RequestInit) {
-    const requests = (await this.composeEndpoints()).map((endpoint) =>
-      this.createRemoteRequest(endpoint, fetchOptions),
-    );
+    const endpoints = await this.composeEndpoints();
+    if (!endpoints?.length) {
+      console.warn('[jindan] no available endpoints.');
+      return;
+    }
+    const requests = endpoints.map((endpoint) => this.createRemoteRequest(endpoint, fetchOptions));
     let res;
     try {
       res = await Promise.race(requests);
